@@ -81,7 +81,7 @@ public final class TestContractsImplFaker {
      * The Test of Retrieve news.
      */
     @Test
-    public void testSave(){
+    public void testSaveNews(){
         Contracts contracts = new ContractsImplFaker();
         final Faker faker = Faker.instance();
 
