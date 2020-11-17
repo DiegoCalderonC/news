@@ -30,14 +30,19 @@ public class News {
     private String title;
 
     /**
-     * The Source.
+     * The Sources.
      */
-    private String source;
+    private String sources;
 
     /**
      * The Author.
      */
     private String author;
+
+    /**
+     * The URL.
+     */
+    private String url;
 
     /**
      * The URL of image.
@@ -59,50 +64,37 @@ public class News {
      */
     private ZonedDateTime publishedAt;
 
-    /**
-     * The Constructor.
-     *
-     * @param id
-     * @param title
-     * @param source
-     * @param author
-     * @param urlImage
-     * @param description
-     * @param content
-     * @param publishedAt
-     */
-    public News(Long id, String title, String source, String author, String urlImage,
+    public News(Long id, String title, String sources, String author, String url, String urlImage,
                 String description, String content, ZonedDateTime publishedAt) {
         this.id = id;
         this.title = title;
-        this.source = source;
+        this.sources = sources;
         this.author = author;
+        this.url = url;
         this.urlImage = urlImage;
         this.description = description;
         this.content = content;
         this.publishedAt = publishedAt;
     }
 
-    /**
-     * @return the id.
-     */
     public Long getId() {
         return id;
     }
 
-    /**
-     * @return the title.
-     */
     public String getTitle() {
         return title;
     }
 
-    public String getSource() {
-        return source;
+    public String getSources() {
+        return sources;
     }
 
     public String getAuthor() {
         return author;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public String getUrlImage() {
@@ -120,4 +112,5 @@ public class News {
     public ZonedDateTime getPublishedAt() {
         return publishedAt;
     }
+
 }

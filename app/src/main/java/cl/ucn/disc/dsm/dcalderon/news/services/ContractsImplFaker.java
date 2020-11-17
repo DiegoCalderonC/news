@@ -10,6 +10,14 @@
 
 package cl.ucn.disc.dsm.dcalderon.news.services;
 
+
+import com.github.javafaker.Faker;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +26,41 @@ import cl.ucn.disc.dsm.dcalderon.news.model.News;
 /**
  * @author Diego Calderon-Carvajal.
  */
-public class ContractsImpl implements Contracts {
+public final class ContractsImplFaker implements Contracts{
+
+    /**
+     * The Logger.
+     */
+    private static final Logger log = LoggerFactory.getLogger(ContractsImplFaker.class);
+
+    /**
+     * The List of News.
+     */
+    private final List<News> theNews = new ArrayList<>();
+
+    /**
+     * The Constructor: Generate 5 {@link News}.
+     */
+    public ContractsImplFaker() {
+
+        // Thee faker to use
+        final Faker faker = Faker.instance();
+
+        for(int i = 0; i < 5; i++){
+            this.theNews.add(new News(
+                    Integer.toUnsignedLong(i),
+                    faker.book().title(),
+                    faker.name().username(),
+                    faker.name().fullName(),
+                    faker.internet().url(),
+                    faker.internet().avatar(),
+                    faker.harryPotter().quote(),
+                    faker.lorem().paragraph(3),
+                    ZonedDateTime.now(ZoneId.of("-3"))
+                    ));
+        }
+    }
+
     /**
      * Get the list of News.
      *
@@ -26,14 +68,9 @@ public class ContractsImpl implements Contracts {
      * @return the List of News
      */
     @Override
-    public List<News> retrieveNews(Integer size) {
-
-        // The list of news
-        final List<News> news = new ArrayList<>();
-
-        // TODO: Add the faker news to the list
-
-        return news;
+    public List<News> retrieveNews(final Integer size) {
+        // The last "size" elements.
+        return theNews.subList(theNews.size() - size, theNews.size());
     }
 
     /**
@@ -42,12 +79,12 @@ public class ContractsImpl implements Contracts {
      * @param news to save
      */
     @Override
-    public void saveNews(News news) {
-
+    public void saveNews(final News news) {
+        // FIXME: Don´t allow duplicated !!
+        this.theNews.add(news);
     }
 
-    @Override
-    public int getListSize() {
-        return 0;
+    public int getListSize(){
+        return theNews.size();
     }
 }
