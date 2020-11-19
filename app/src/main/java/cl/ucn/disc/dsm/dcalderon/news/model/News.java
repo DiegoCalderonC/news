@@ -113,4 +113,9 @@ public class News {
         return publishedAt;
     }
 
+    public void printNews(){
+        System.out.println(getId() + "\n" + getTitle() + "\n" + getAuthor() + "\n" + getContent()
+                + "\n" + getDescription() + "\n" + getSources() + "\n" + getUrl()
+                + "\n" + getUrlImage() + "\n" + getPublishedAt());
+    }
 }
