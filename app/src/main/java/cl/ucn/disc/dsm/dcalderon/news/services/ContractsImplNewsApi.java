@@ -33,6 +33,7 @@ import cl.ucn.disc.dsm.dcalderon.news.model.News;
 import cl.ucn.disc.dsm.dcalderon.news.model.Validation;
 
 public class ContractsImplNewsApi implements Contracts {
+
     /**
      * The logger.
      */
@@ -43,26 +44,30 @@ public class ContractsImplNewsApi implements Contracts {
      */
     private final NewsApiService newsApiService;
 
-     /**
-      * The Constructor.
-      *
-      * @param theApiKey to use.
-      */
-     public ContractsImplNewsApi(final String theApiKey) {
-         Validation.minSize(theApiKey, 10 ,  "ApiKey !!");
-         this   .newsApiService = new   NewsApiService(theApiKey);
-     }
-     /**
-      * The Assembler/Transformer pattern!
-      *
-      * @param article used to source.
-      * @return the News.
-      */
-     private static News toNews(final Article article) {
-         Validation.notNull(article, "Article null !?!");
+    /**
+     * The Constructor.
+     *
+     * @param theApiKey to use.
+     */
+    public ContractsImplNewsApi(final String theApiKey) {
 
-         // Warning message?
-         boolean needFix = false;
+        Validation.minSize(theApiKey, 10, "ApiKey !!");
+
+        this.newsApiService = new NewsApiService(theApiKey);
+    }
+
+    /**
+     * The Assembler/Transformer pattern!
+     *
+     * @param article used to source
+     * @return the News.
+     */
+    private static News toNews(final Article article) {
+
+        Validation.notNull(article, "Article null !?!");
+
+        // Warning message?
+        boolean needFix = false;
 
          // Fix the author null : (
          if  (article.getAuthor() == null   ) {

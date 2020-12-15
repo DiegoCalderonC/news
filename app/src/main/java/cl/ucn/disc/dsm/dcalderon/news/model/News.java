@@ -150,4 +150,5 @@ public class News {
     public ZonedDateTime getPublishedAt() {
         return publishedAt;
     }
+
 }
