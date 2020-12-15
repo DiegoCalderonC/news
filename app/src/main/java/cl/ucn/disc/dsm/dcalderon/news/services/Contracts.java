@@ -35,6 +35,4 @@ public interface Contracts {
      * @param news to save
      */
     void saveNews(News news);
-
-    int getListSize();
 }

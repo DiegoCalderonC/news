@@ -10,8 +10,7 @@
 
 package cl.ucn.disc.dsm.dcalderon.news.model;
 
-import com.github.javafaker.Faker;
-
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,26 +19,155 @@ import org.threeten.bp.ZonedDateTime;
 
 public class TestNews {
 
-    private static final Logger log = LoggerFactory.getLogger(News.class);
+    /**
+     * The Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(TestNews.class);
 
     /**
-     * The test of News
+     * Testing the constructor
      */
     @Test
-    public void testNews(){
-        final Faker faker = Faker.instance();
+    public void testConstructor(){
 
+        log.debug("Testing...");
+
+        // all data ok
         News news = new News(
-                Integer.toUnsignedLong(1),
-                faker.book().title(),
-                faker.name().username(),
-                faker.name().fullName(),
-                faker.internet().url(),
-                faker.internet().avatar(),
-                faker.harryPotter().quote(),
-                faker.lorem().paragraph(3),
-                ZonedDateTime.now(ZoneId.of("-3")));
+                "The Title",
+                "The Source",
+                "The Author",
+                "The URL",
+                "The URL Image",
+                "The Description",
+                "The Content",
+                ZonedDateTime.now(ZoneId.of("-3"))
+        );
 
-        news.printNews();
+        log.debug("The id: {}.", news.getId());
+
+        Assertions.assertEquals(1182083507361219134L, news.getId(), "Wrong id !");
+
+        log.debug("Tittle null...");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new News(
+                    null,
+                    "The Source",
+                    "The Author",
+                    "The URL",
+                    "The URL Image",
+                    "The Description",
+                    "The Content",
+                    ZonedDateTime.now(ZoneId.of("-3"))
+            );
+        });
+
+        log.debug("Source null...");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new News(
+                    "The Title",
+                    null,
+                    "The Author",
+                    "The URL",
+                    "The URL Image",
+                    "The Description",
+                    "The Content",
+                    ZonedDateTime.now(ZoneId.of("-3"))
+            );
+        });
+
+        log.debug("Author null...");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new News(
+                    "The Title",
+                    "The Source",
+                    null,
+                    "The URL",
+                    "The URL Image",
+                    "The Description",
+                    "The Content",
+                    ZonedDateTime.now(ZoneId.of("-3"))
+            );
+        });
+
+        log.debug("URL null...");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new News(
+                    "The Title",
+                    "The Source",
+                    "The Author",
+                    null,
+                    "The URL Image",
+                    "The Description",
+                    "The Content",
+                    ZonedDateTime.now(ZoneId.of("-3"))
+            );
+        });
+
+        log.debug("URL Image null...");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new News(
+                    "The Title",
+                    "The Source",
+                    "The Author",
+                    "The URL",
+                    null,
+                    "The Description",
+                    "The Content",
+                    ZonedDateTime.now(ZoneId.of("-3"))
+            );
+        });
+
+        log.debug("Description null...");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new News(
+                    "The Title",
+                    "The Source",
+                    "The Author",
+                    "The URL",
+                    "The URL Image",
+                    null,
+                    "The Content",
+                    ZonedDateTime.now(ZoneId.of("-3"))
+            );
+        });
+
+        log.debug("Content null...");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new News(
+                    "The Title",
+                    "The Source",
+                    "The Author",
+                    "The URL",
+                    "The URL Image",
+                    "The Description",
+                    null,
+                    ZonedDateTime.now(ZoneId.of("-3"))
+            );
+        });
+
+        log.debug("PublishedAt null...");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new News(
+                    "The Title",
+                    "The Source",
+                    "The Author",
+                    "The URL",
+                    "The URL Image",
+                    "The Description",
+                    "The Content",
+                    null
+            );
+        });
+
+        log.debug(".. Done!");
     }
 }

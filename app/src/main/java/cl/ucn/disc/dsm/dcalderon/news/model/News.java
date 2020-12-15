@@ -1,5 +1,5 @@
 /*
- * Copyright Staday.year Diego.Calderon.Carvajal, diego.calderon@alumnos.ucn.cl
+ * Copyright $taday.year Diego.Calderon.Carvajal, diego.calderon@alumnos.ucn.cl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -10,6 +10,8 @@
 
 package cl.ucn.disc.dsm.dcalderon.news.model;
 
+import net.openhft.hashing.LongHashFunction;
+
 import org.threeten.bp.ZonedDateTime;
 
 /**
@@ -18,6 +20,7 @@ import org.threeten.bp.ZonedDateTime;
  * @author Diego Calderon-Carvajal
  */
 public class News {
+
     /**
      * Unique id
      */
@@ -64,16 +67,51 @@ public class News {
      */
     private ZonedDateTime publishedAt;
 
-    public News(Long id, String title, String sources, String author, String url, String urlImage,
+    /**
+     * The Constructor
+     *
+     * @param title
+     * @param sources
+     * @param author
+     * @param url
+     * @param urlImage
+     * @param description
+     * @param content
+     * @param publishedAt
+     */
+    public News(String title, String sources, String author, String url, String urlImage,
                 String description, String content, ZonedDateTime publishedAt) {
-        this.id = id;
+
+        // Validacion de size
+        Validation.minSize(title, 2, "titlle");
         this.title = title;
+
+        // Validacion de source
+        Validation.minSize(sources, 2, "source");
         this.sources = sources;
+
+        // Validacion de author
+        Validation.minSize(author, 2, "author");
         this.author = author;
+
+        // Hashing unique! https://github.com/Cyan4973/xxHash
+        this.id = LongHashFunction.xx()
+                .hashChars(title + "|" + sources + "|" + author);
+
+        // Can't be null
         this.url = url;
         this.urlImage = urlImage;
+
+        // Validacion de description
+        Validation.minSize(description, 10, "description");
         this.description = description;
+
+        // Validacion de content
+        Validation.notNull(content, "content");
         this.content = content;
+
+        // Validacion de publishedAt
+        Validation.notNull(publishedAt, "publishedAt");
         this.publishedAt = publishedAt;
     }
 
@@ -111,11 +149,5 @@ public class News {
 
     public ZonedDateTime getPublishedAt() {
         return publishedAt;
-    }
-
-    public void printNews(){
-        System.out.println(getId() + "\n" + getTitle() + "\n" + getAuthor() + "\n" + getContent()
-                + "\n" + getDescription() + "\n" + getSources() + "\n" + getUrl()
-                + "\n" + getUrlImage() + "\n" + getPublishedAt());
     }
 }
