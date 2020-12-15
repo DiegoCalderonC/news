@@ -83,6 +83,15 @@ public class ContractsImplNewsApi implements Contracts {
                  .parse(article.getPublishedAt())
                  .withZoneSameInstant(ZoneId.of("-3"   ));
 
+         if(article.getAuthor() == null){
+             log.warn("Article without author !!");
+             return null;
+         }
+         if(article.getDescription() == null){
+             log.warn("Description without author !!");
+             return null;
+         }
+
          // The News
          return new   News(
                  article.getTitle(),
@@ -104,13 +113,17 @@ public class ContractsImplNewsApi implements Contracts {
      @Override
      public List<News> retrieveNews(final Integer size) {
          try   {
+             // Request to NewsApi
              List<Article> articles = newsApiService.getTopHeadlines(
-                     "technology", size
+                     "general", size
              );
+
              // The List of Articles to List of News
              List<News> news = new   ArrayList<>();
+
              for   (Article article : articles) {
                  // log.debug("Article: {}", ToStringBuilder.reflectionToString(article, ToStringStyle.MULTI_LINE_STYLE));
+
                  news.add(toNews(article));
              }
              return news;
