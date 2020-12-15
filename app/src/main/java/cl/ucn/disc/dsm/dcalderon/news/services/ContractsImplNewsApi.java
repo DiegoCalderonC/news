@@ -23,6 +23,11 @@ import org.threeten.bp.ZonedDateTime;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import cl.ucn.disc.dsm.dcalderon.news.model.News;
 import cl.ucn.disc.dsm.dcalderon.news.model.Validation;
@@ -50,8 +55,8 @@ public class ContractsImplNewsApi implements Contracts {
      /**
       * The Assembler/Transformer pattern!
       *
-      * @param article used to source66
-      * @return the News.67
+      * @param article used to source.
+      * @return the News.
       */
      private static News toNews(final Article article) {
          Validation.notNull(article, "Article null !?!");
@@ -83,7 +88,7 @@ public class ContractsImplNewsApi implements Contracts {
                  .parse(article.getPublishedAt())
                  .withZoneSameInstant(ZoneId.of("-3"   ));
 
-         if(article.getAuthor() == null){
+         if(article.getAuthor() == null || article.getAuthor().length() == 0){
              log.warn("Article without author !!");
              return null;
          }
@@ -104,11 +109,24 @@ public class ContractsImplNewsApi implements Contracts {
                  publishedAt
          );
      }
+
+    /**
+     * Filter the stream.
+     *
+     * @param idExtractor
+     * @param <T> news to filter
+     * @return true if the news already exist.
+     */
+    private static <T> Predicate<T> distinctById(Function<? super T, ?> idExtractor){
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(idExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
      /**
-      * Get the list of News.116
+      * Get the list of News.
       *
-      * @param size of the list.118
-      * @return the List of News.119
+      * @param size of the list.
+      * @return the List of News.
       */
      @Override
      public List<News> retrieveNews(final Integer size) {
@@ -123,17 +141,24 @@ public class ContractsImplNewsApi implements Contracts {
 
              for   (Article article : articles) {
                  // log.debug("Article: {}", ToStringBuilder.reflectionToString(article, ToStringStyle.MULTI_LINE_STYLE));
-
                  news.add(toNews(article));
              }
-             return news;
+             return news.stream()
+                     // Remote the duplicates (by id).
+                     .filter(distinctById(News::getId))
+                     // Sort the stream by publishedAt
+                     .sorted((k1, k2) -> k2.getPublishedAt().compareTo(k1.getPublishedAt()))
+                     // Retrun the stream to lista
+                     .collect(Collectors.toList());
+
          } catch (IOException ex) {
-             log.error("Error", ex);
-             return null   ;
+             // Encapsulate!
+             throw  new RuntimeException(ex);
          }
      }
+
      /**
-      * Save one News into the System.145
+      * Save one News into the System.
       *
       * @param news to save.
       */
